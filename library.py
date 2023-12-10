@@ -161,8 +161,11 @@ def inser(filename):
     niveau=resize_chaine( niveau,tniveau)
     etud=mat+nom+prénom+niveau+"0"
   
-
-    f=open(filename,"rb+")
+    try:
+        f=open(filename,"rb+")
+    except:
+        print("Fichier introuvable")
+        exit()   
     nbr_blocks=entete(f,1)
     nbr_eng=entete(f,0)
     buff=lirebloc(f,nbr_blocks-1)
@@ -189,7 +192,13 @@ def inser(filename):
 
 
 def chercher(filename,cle):
-    f = open(filename, 'rb')
+
+    try:
+        f = open(filename, 'rb')
+    except:
+        print("Fichier introuvable")
+        exit()
+    
     nb_blocks = entete(f, 1)
     
     for i in range(nb_blocks):
@@ -210,11 +219,18 @@ def chercher(filename,cle):
 
 
 def supprimer(filename, cle):
-
+    
+    #error handling for no file
+    try:
+        f = open(filename, 'rb')
+    except:
+        print("Fichier introuvable")
+        exit()
+   
     result = chercher(filename, cle)
     if result:
         i, j = result
-        f = open(filename, 'r+b')
+        
         nbr_eng=entete(f,0)
         buf = lirebloc(f, i)
         eng=buf[1][j]
@@ -240,7 +256,16 @@ def fragmentation():
     a = input('entrez la valeur c1imale : ')
     c = input('entrez la valeur c2imale : ')
     
-    f = open(file,'rb')
+    #error handling for no file
+    try :
+        f = open(file,'rb')
+    except:
+        print('fichier introuvable')
+        exit
+    
+    
+
+
     fc1 = open('filec1','wb')
     fc2 = open('filec2','wb')
     fmoyen = open('filemoyen','wb') 
@@ -306,8 +331,8 @@ def fragmentation():
     fc2.close()
     fmoyen.close()
 
-filename="test"
-cle="55g"
+filename="t2"
+cle='123'
 #Creer_fichier()
 #afficher_fichier()
 #print(chercher(filename,cle))
@@ -316,7 +341,43 @@ cle="55g"
 #afficher_fichier()
 #print(chercher(filename,cle))
 #fragmentation()
-i=0
+'''i=0
 for i in range(3):
     afficher_fichier()
+'''
 
+
+
+
+def main():
+  print("Which function would you like to use?")
+  print("1. Creer_fichier")
+  print("2. afficher_fichier")
+  print("3. chercher")
+  print("4. supprimer")
+  print("5. inser")
+  print("6. fragmentation")
+  choice = int(input())
+  if choice == 1:
+    Creer_fichier()
+
+  elif choice == 2:
+       afficher_fichier()
+
+  elif choice == 3:
+
+        filename=input("Enter the name of the file: ")
+        cle=input("Enter the key: ")
+        print(chercher(filename,cle))
+  elif choice == 4:
+        filename=input("Enter the name of the file: ")
+        cle=input("Enter the key: ")
+        supprimer(filename,cle)
+  elif choice == 5:
+        filename=input("Enter the name of the file: ")
+        inser(filename)
+  elif choice == 6:
+        fragmentation()
+
+
+main()
