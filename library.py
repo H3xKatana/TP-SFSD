@@ -1,4 +1,5 @@
 from pickle import dumps ,loads
+from pickle import *
 from sys import getsizeof
 global b #Nombre c2imal d'enregistrement dans le buffer ou le bloc
 global tnom #La taille du champ Nom
@@ -226,7 +227,7 @@ def supprimer(filename, cle):
     except:
         print("Fichier introuvable")
         exit()
-   
+    print(entete(f,0))
     result = chercher(filename, cle)
     if result:
         i, j = result
@@ -238,7 +239,8 @@ def supprimer(filename, cle):
         #change  supprime = 1 pour logical supprimer
         eng=eng[:len(eng)-1]+'1'
         buf[1][j]=eng
-        affecter_entete(f, 0, nbr_eng-1) #Ecrire la première caractéristique
+        nbr_eng -=1
+        affecter_entete(f, 0, nbr_eng) #Ecrire la première caractéristique
         ecrireBloc(f, i, buf)
             
         print(f"eng ave mat {cle} est logical supp.")
@@ -331,6 +333,68 @@ def fragmentation():
     fc2.close()
     fmoyen.close()
 
+
+
+def suppression_physique():
+    file = input('entrez le nom du ficlehier : ')
+    cle = input("entrez la clelé de l'enregistrement à supprimer : ") 
+    boolen = False
+    fin = False
+    try:
+        f= open(file,'rb+')
+    except:
+        print('no file')
+        exit()
+    result=chercher(file,cle)
+    nbr_eng = entete(f,0)
+    nbr_blocks = entete(f,1)
+    buf2=lirebloc(f,nbr_blocks-1)
+
+    if result:# le cle est trouve dans un eng
+                i,j=result
+                print("suppression ")
+                
+                
+
+                buf =lirebloc(f,i)
+                buf_nb=buf2[0]
+                buf_tab =buf2[1]
+
+                
+                buf2_nb=buf2[0]
+                buf2_tab =buf2[1]
+
+                if buf2_nb == 1:
+                    buf_tab[j]=buf2_tab[1]
+                    buf=[buf_nb,buf_tab]
+                    ecrireBloc(f,i,buf)
+                    buf2=[0,[]]
+                    affecter_entete(f,0,nbr_blocks-1)
+                else:
+                    buf_tab[j]=buf2_tab[buf2_nb-1]
+                    buf=[buf_nb,buf_tab]
+                    ecrireBloc(f,i,buf)
+                    buf2_nb -=1
+                    buf2_tab=buf2_tab[0:buf2_nb-1]
+                    buf2=[buf2_nb,buf2_tab]
+                    ecrireBloc(f,nbr_blocks-1,buf)
+                    
+    else:
+        print("l'element nexiste pas ")
+
+                    
+                    
+
+
+
+
+                
+
+
+                
+
+    f.close()
+
 filename="t2"
 cle='123'
 #Creer_fichier()
@@ -372,12 +436,15 @@ def main():
   elif choice == 4:
         filename=input("Enter the name of the file: ")
         cle=input("Enter the key: ")
+      
         supprimer(filename,cle)
   elif choice == 5:
         filename=input("Enter the name of the file: ")
         inser(filename)
   elif choice == 6:
         fragmentation()
+  elif choice == 7:
+        suppression_physique()
 
 
 main()
