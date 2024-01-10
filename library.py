@@ -338,8 +338,7 @@ def fragmentation():
 def suppression_physique():
     file = input('entrez le nom du ficlehier : ')
     cle = input("entrez la clelé de l'enregistrement à supprimer : ") 
-    boolen = False
-    fin = False
+   
     try:
         f= open(file,'rb+')
     except:
@@ -383,7 +382,7 @@ def suppression_physique():
         print("l'element nexiste pas ")
 
                     
-                    
+        
 
 
 
@@ -421,6 +420,7 @@ def main():
   print("4. supprimer")
   print("5. inser")
   print("6. fragmentation")
+  print("suppression_physique")
   choice = int(input())
   if choice == 1:
     Creer_fichier()
